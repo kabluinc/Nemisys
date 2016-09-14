@@ -2,15 +2,16 @@ package org.itxtech.nemisys.utils;
 
 import org.itxtech.nemisys.Nemisys;
 import org.itxtech.nemisys.command.CommandReader;
-import org.itxtech.nemisys.Server;
 import org.fusesource.jansi.AnsiConsole;
 
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
 /**
  * author: MagicDroidX
  * Nukkit
@@ -23,8 +24,6 @@ public class MainLogger extends ThreadedLogger {
     protected boolean logDebug = false;
 
     protected static MainLogger logger;
-
-    private Server server;
 
     public MainLogger(String logFile) {
         this(logFile, false);
@@ -170,11 +169,12 @@ public class MainLogger extends ThreadedLogger {
                 String chunk = this.logStream;
                 this.logStream = "";
                 try {
-                    FileWriter writer = new FileWriter(this.logFile, true);
+                    OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(this.logFile, true), StandardCharsets.UTF_8);
                     writer.write(chunk);
+                    writer.flush();
                     writer.close();
-                } catch(IOException e) {
-                    //Ignore
+                } catch (Exception e) {
+                    this.logException(e);
                 }
             }
 
@@ -183,7 +183,7 @@ public class MainLogger extends ThreadedLogger {
                     wait(25000);
                 }
             } catch (InterruptedException e) {
-                //ignore
+                //igonre
             }
         }
 
@@ -191,11 +191,12 @@ public class MainLogger extends ThreadedLogger {
             String chunk = this.logStream;
             this.logStream = "";
             try {
-                FileWriter writer = new FileWriter(this.logFile, true);
+                OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(this.logFile, true), StandardCharsets.UTF_8);
                 writer.write(chunk);
+                writer.flush();
                 writer.close();
-            } catch(IOException e) {
-                //Ignore
+            } catch (Exception e) {
+                this.logException(e);
             }
         }
     }
